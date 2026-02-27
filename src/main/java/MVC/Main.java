@@ -20,9 +20,9 @@ public class Main {
         view.getUiPanelInformacion().registrarEstrategia(EstadoVista.LISTA_PRODUCTOS, new PanelResumen());
         view.getUiPanelInformacion().registrarEstrategia(EstadoVista.CHECKOUT, new PanelCheckout());
         view.getUiPanelInformacion().registrarEstrategia(EstadoVista.CONFIRMACION_PAGO, new PanelRecibo());
-        view.getUiPanelProducto().registrarImagen("Sabritas", "assets/sabritas.png");
-        view.getUiPanelProducto().registrarImagen("Galletas", "assets/galletas.png");
-        view.getUiPanelProducto().registrarImagen("Pan Dulce", "assets/pandulce.png");
+        view.getUiPanelProducto().registrarImagen("Sabritas", "/assets/sabritas.png");
+        view.getUiPanelProducto().registrarImagen("Galletas", "/assets/oreos.png");
+        view.getUiPanelProducto().registrarImagen("Pan Dulce", "/assets/pan_dulce.png");
         view.getUiPanelProducto().registrarImagen("Cafe", "assets/cafe.png");
         modelo.agregarSuscriptor(view);
         view.actualizar(modelo);

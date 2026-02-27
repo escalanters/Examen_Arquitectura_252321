@@ -4,7 +4,7 @@ import MVC.domain.DetalleVenta;
 import MVC.interfaces.IControlador;
 import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
-
+import MVC.styles.Button;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -52,11 +52,7 @@ public class PanelResumen implements IPanelInfoEstado {
         panelBoton.setBackground(Color.WHITE);
         panelBoton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnCheckout = new JButton("Checkout");
-        btnCheckout.setFont(new Font("Arial", Font.PLAIN, 14));
-        btnCheckout.setPreferredSize(new Dimension(120, 35));
-        btnCheckout.setFocusPainted(false);
-        btnCheckout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Button btnCheckout = new Button("Checkout",Color.BLUE);
         btnCheckout.addActionListener(e -> controlador.checkout());
         panelBoton.add(btnCheckout);
 

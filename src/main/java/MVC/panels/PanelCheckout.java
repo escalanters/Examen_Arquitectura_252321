@@ -3,6 +3,7 @@ package MVC.panels;
 import MVC.interfaces.IControlador;
 import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
+import MVC.styles.Button;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,10 +44,10 @@ public class PanelCheckout implements IPanelInfoEstado {
         panelBotones.setBackground(Color.WHITE);
         panelBotones.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnRegresar = crearBoton("Regresar");
+        Button btnRegresar = new Button("Regresar", Color.GRAY);
         btnRegresar.addActionListener(e -> controlador.regresar());
 
-        JButton btnPagar = crearBoton("Pagar");
+        Button btnPagar = new Button("Pagar", Color.BLUE);
         btnPagar.addActionListener(e -> controlador.pagar(
                 txtTarjeta.getText().trim(),
                 txtBanco.getText().trim(),
@@ -75,12 +76,5 @@ public class PanelCheckout implements IPanelInfoEstado {
         return txt;
     }
 
-    private JButton crearBoton(String texto) {
-        JButton btn = new JButton(texto);
-        btn.setFont(new Font("Arial", Font.PLAIN, 14));
-        btn.setPreferredSize(new Dimension(110, 35));
-        btn.setFocusPainted(false);
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return btn;
-    }
+
 }

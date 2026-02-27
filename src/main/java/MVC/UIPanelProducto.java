@@ -4,6 +4,8 @@ import MVC.domain.Producto;
 import MVC.interfaces.IComponent;
 import MVC.interfaces.IControlador;
 import MVC.interfaces.IModeloLectura;
+import MVC.styles.CustomScrollPane;
+import MVC.styles.Button;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,9 +33,14 @@ public class UIPanelProducto extends JPanel implements IComponent {
         panelContenedor.setBackground(Color.WHITE);
 
         JScrollPane scrollPane = new JScrollPane(panelContenedor);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane = construirScrollPane();
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private CustomScrollPane construirScrollPane(){
+        CustomScrollPane scrollPane = new CustomScrollPane(panelContenedor,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
+        return scrollPane;
     }
 
     public void registrarImagen(String nombreProducto, String rutaImagen) {
@@ -74,14 +81,18 @@ public class UIPanelProducto extends JPanel implements IComponent {
         String ruta = imagenesProducto.get(producto.getNombre());
         if (ruta != null) {
             try {
-                File archivo = new File(ruta);
-                if (archivo.exists()) {
-                    BufferedImage img = ImageIO.read(archivo);
+                java.net.URL imgURL = getClass().getResource(ruta);
+                if (imgURL != null) {
+                    BufferedImage img = ImageIO.read(imgURL);
                     Image scaled = img.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
                     lblImagen.setIcon(new ImageIcon(scaled));
+                } else {
+                    lblImagen.setText("IMG NOT FOUND");
+                    lblImagen.setFont(new Font("Arial", Font.BOLD, 10));
+                    lblImagen.setForeground(Color.RED);
                 }
             } catch (Exception e) {
-                lblImagen.setText("IMG");
+                lblImagen.setText("ERR");
                 lblImagen.setFont(new Font("Arial", Font.BOLD, 12));
                 lblImagen.setForeground(Color.GRAY);
             }
@@ -115,22 +126,14 @@ public class UIPanelProducto extends JPanel implements IComponent {
         panelCantidad.setBackground(Color.WHITE);
         panelCantidad.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnMenos = new JButton("—");
-        btnMenos.setFont(new Font("Arial", Font.BOLD, 18));
-        btnMenos.setPreferredSize(new Dimension(45, 40));
-        btnMenos.setFocusPainted(false);
-        btnMenos.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Button btnMenos = new Button(" - ",Color.gray);
         btnMenos.addActionListener(e -> controlador.decrementarCantidad(producto));
 
         JLabel lblCantidad = new JLabel(String.valueOf(cantidad), SwingConstants.CENTER);
         lblCantidad.setFont(new Font("Arial", Font.BOLD, 22));
         lblCantidad.setPreferredSize(new Dimension(40, 40));
 
-        JButton btnMas = new JButton("+");
-        btnMas.setFont(new Font("Arial", Font.BOLD, 18));
-        btnMas.setPreferredSize(new Dimension(45, 40));
-        btnMas.setFocusPainted(false);
-        btnMas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Button btnMas = new Button(" + ", Color.gray);
         btnMas.addActionListener(e -> controlador.incrementarCantidad(producto));
 
         panelCantidad.add(btnMenos);
