@@ -1,9 +1,9 @@
 package MVC;
 
+import MVC.dto.VistaDTO;
 import MVC.enums.EstadoVista;
 import MVC.interfaces.IComponent;
 import MVC.interfaces.IControlador;
-import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
 
 import javax.swing.*;
@@ -38,12 +38,12 @@ public class UIPanelInformacion extends JPanel implements IComponent {
     }
 
     @Override
-    public void actualizar(IModeloLectura modelo) {
+    public void actualizar(VistaDTO datos) {
         panelContenido.removeAll();
 
-        IPanelInfoEstado estrategia = estrategias.get(modelo.getEstadoVista());
+        IPanelInfoEstado estrategia = estrategias.get(datos.getEstadoVista());
         if (estrategia != null) {
-            JPanel panel = estrategia.construir(modelo, controlador);
+            JPanel panel = estrategia.construir(datos, controlador);
             panelContenido.add(panel, BorderLayout.CENTER);
         }
 

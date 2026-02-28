@@ -1,5 +1,7 @@
 package MVC;
 
+import MVC.dto.VistaDTO;
+import MVC.dto.VistaDTOMapper;
 import MVC.enums.EstadoVista;
 import MVC.interfaces.IComponent;
 import MVC.interfaces.IControlador;
@@ -17,6 +19,7 @@ public class UIViewPrincipal extends JFrame implements ISuscriptor {
     private static final int ANCHO_VENTANA = 1040;
     private static final int ALTO_VENTANA = 680;
 
+    private final IModeloLectura lectura;
     private final IControlador controlador;
     private final List<IComponent> componentesActualizables;
     private final Map<EstadoVista, String[]> titulosPorEstado;
@@ -27,6 +30,7 @@ public class UIViewPrincipal extends JFrame implements ISuscriptor {
 
     public UIViewPrincipal(IControlador controlador, IModeloLectura lectura) {
         this.controlador = controlador;
+        this.lectura = lectura;
         componentesActualizables = new ArrayList<>();
         titulosPorEstado = new EnumMap<>(EstadoVista.class);
 
@@ -51,6 +55,7 @@ public class UIViewPrincipal extends JFrame implements ISuscriptor {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Color.WHITE);
+        setResizable(false);
     }
 
     private void inicializarComponentes() {
@@ -79,19 +84,20 @@ public class UIViewPrincipal extends JFrame implements ISuscriptor {
     }
 
     public UIPanelProducto getUiPanelProducto() { return uiPanelProducto; }
-
     public UIPanelInformacion getUiPanelInformacion() { return uiPanelInformacion; }
 
     @Override
-    public void actualizar(IModeloLectura modelo) {
-        String[] titulos = titulosPorEstado.get(modelo.getEstadoVista());
+    public void actualizar() {
+        VistaDTO datos = VistaDTOMapper.desdeModelo(lectura);
+
+        String[] titulos = titulosPorEstado.get(datos.getEstadoVista());
         if (titulos != null) {
             setTitle(titulos[0]);
             lblTitulo.setText(titulos[1]);
         }
 
         for (IComponent componente : componentesActualizables) {
-            componente.actualizar(modelo);
+            componente.actualizar(datos);
         }
     }
 }

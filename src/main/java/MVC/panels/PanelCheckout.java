@@ -1,17 +1,24 @@
 package MVC.panels;
 
+import MVC.dto.VistaDTO;
 import MVC.interfaces.IControlador;
-import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
 import MVC.styles.Button;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel de checkout — solicita datos de pago al usuario.
+ *
+ * Recibe VistaDTO (aunque en este panel no necesita muchos datos del estado,
+ * la firma uniforme permite consistencia con el patrón Strategy).
+ * Las acciones del usuario se envían al controlador con datos primitivos.
+ */
 public class PanelCheckout implements IPanelInfoEstado {
 
     @Override
-    public JPanel construir(IModeloLectura modelo, IControlador controlador) {
+    public JPanel construir(VistaDTO datos, IControlador controlador) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
@@ -44,7 +51,7 @@ public class PanelCheckout implements IPanelInfoEstado {
         panelBotones.setBackground(Color.WHITE);
         panelBotones.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        Button btnRegresar = new Button("Regresar", Color.GRAY);
+        Button btnRegresar = new Button("Regresar", Color.RED);
         btnRegresar.addActionListener(e -> controlador.regresar());
 
         Button btnPagar = new Button("Pagar", Color.BLUE);
@@ -75,6 +82,4 @@ public class PanelCheckout implements IPanelInfoEstado {
         txt.setAlignmentX(Component.LEFT_ALIGNMENT);
         return txt;
     }
-
-
 }

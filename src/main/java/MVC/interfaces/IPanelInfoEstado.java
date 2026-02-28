@@ -1,7 +1,9 @@
 package MVC.interfaces;
 
+import MVC.dto.VistaDTO;
+
 import javax.swing.JPanel;
 
 public interface IPanelInfoEstado {
-    JPanel construir(IModeloLectura modelo, IControlador controlador);
+    JPanel construir(VistaDTO datos, IControlador controlador);
 }

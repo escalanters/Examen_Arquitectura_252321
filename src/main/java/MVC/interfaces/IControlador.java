@@ -1,10 +1,8 @@
 package MVC.interfaces;
 
-import MVC.domain.Producto;
-
 public interface IControlador {
-    void incrementarCantidad(Producto producto);
-    void decrementarCantidad(Producto producto);
+    void incrementarCantidad(String nombreProducto);
+    void decrementarCantidad(String nombreProducto);
     void checkout();
     void regresar();
     void pagar(String numeroTarjeta, String bancoEmisor, String ciudad);

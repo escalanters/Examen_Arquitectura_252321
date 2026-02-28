@@ -1,6 +1,5 @@
 package MVC;
 
-import MVC.domain.Producto;
 import MVC.enums.EstadoVista;
 import MVC.interfaces.IControlador;
 import MVC.interfaces.IModeloEscritura;
@@ -16,13 +15,13 @@ public class Controlador implements IControlador {
     }
 
     @Override
-    public void incrementarCantidad(Producto producto) {
-        escritura.incrementarCantidad(producto);
+    public void incrementarCantidad(String nombreProducto) {
+        escritura.incrementarCantidad(nombreProducto);
     }
 
     @Override
-    public void decrementarCantidad(Producto producto) {
-        escritura.decrementarCantidad(producto);
+    public void decrementarCantidad(String nombreProducto) {
+        escritura.decrementarCantidad(nombreProducto);
     }
 
     @Override

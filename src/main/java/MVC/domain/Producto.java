@@ -1,4 +1,5 @@
 package MVC.domain;
+import java.util.Objects;
 
 public class Producto {
     private String nombre;
@@ -28,5 +29,18 @@ public class Producto {
     @Override
     public String toString() {
         return nombre + " - $" + String.format("%.2f", precio) + " MXN";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(nombre, producto.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre);
     }
 }

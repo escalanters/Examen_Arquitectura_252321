@@ -1,10 +1,11 @@
 package MVC.panels;
 
-import MVC.domain.DetalleVenta;
+import MVC.dto.DetalleVentaDTO;
+import MVC.dto.VistaDTO;
 import MVC.interfaces.IControlador;
-import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
 import MVC.styles.Button;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -16,7 +17,7 @@ import java.util.List;
 public class PanelResumen implements IPanelInfoEstado {
 
     @Override
-    public JPanel construir(IModeloLectura modelo, IControlador controlador) {
+    public JPanel construir(VistaDTO datos, IControlador controlador) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
@@ -27,7 +28,7 @@ public class PanelResumen implements IPanelInfoEstado {
         panel.add(titulo);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        List<DetalleVenta> detalles = modelo.generarDetallesCarrito();
+        List<DetalleVentaDTO> detalles = datos.getDetallesCarrito();
         JTable tabla = crearTablaDetalles(detalles);
         JScrollPane scrollTabla = new JScrollPane(tabla);
         scrollTabla.setPreferredSize(new Dimension(300, 120));
@@ -42,7 +43,7 @@ public class PanelResumen implements IPanelInfoEstado {
         lblTotalTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(lblTotalTitulo);
 
-        JLabel lblTotal = new JLabel(String.format("%.2fMXN", modelo.calcularTotal()));
+        JLabel lblTotal = new JLabel(String.format("%.2fMXN", datos.getTotalCarrito()));
         lblTotal.setFont(new Font("Arial", Font.BOLD, 18));
         lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(lblTotal);
@@ -52,7 +53,8 @@ public class PanelResumen implements IPanelInfoEstado {
         panelBoton.setBackground(Color.WHITE);
         panelBoton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        Button btnCheckout = new Button("Checkout",Color.BLUE);
+        Button btnCheckout = new Button("Checkout", Color.black);
+        btnCheckout.setEnabled(datos.hayProductosEnCarrito());
         btnCheckout.addActionListener(e -> controlador.checkout());
         panelBoton.add(btnCheckout);
 
@@ -60,45 +62,7 @@ public class PanelResumen implements IPanelInfoEstado {
         return panel;
     }
 
-    private JTable crearTablaDetalles(List<DetalleVenta> detalles) {
-        return getjTable(detalles);
-    }
-
-    static JTable getjTable(List<DetalleVenta> detalles) {
-        String[] columnas = {"Producto", "Cantidad", "Total"};
-        Object[][] datos = new Object[detalles.size()][3];
-
-        for (int i = 0; i < detalles.size(); i++) {
-            DetalleVenta d = detalles.get(i);
-            datos[i][0] = d.getProducto().getNombre();
-            datos[i][1] = d.getCantidad();
-            datos[i][2] = String.format("%.2f", d.getSubtotal());
-        }
-
-        DefaultTableModel tableModel = new DefaultTableModel(datos, columnas) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
-        };
-
-        JTable tabla = new JTable(tableModel);
-        tabla.setFont(new Font("Arial", Font.PLAIN, 13));
-        tabla.setRowHeight(24);
-        tabla.setShowGrid(true);
-        tabla.setGridColor(Color.BLACK);
-
-        JTableHeader header = tabla.getTableHeader();
-        header.setFont(new Font("Arial", Font.BOLD, 13));
-        header.setBackground(Color.WHITE);
-        header.setBorder(new LineBorder(Color.BLACK, 1));
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        tabla.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-        tabla.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
-
-        return tabla;
+    private JTable crearTablaDetalles(List<DetalleVentaDTO> detalles) {
+        return TablaDetallesHelper.crearTabla(detalles);
     }
 }

@@ -1,22 +1,21 @@
 package MVC.panels;
 
-import MVC.domain.DetalleVenta;
-import MVC.domain.Usuario;
-import MVC.domain.Venta;
+import MVC.dto.DetalleVentaDTO;
+import MVC.dto.UsuarioDTO;
+import MVC.dto.VistaDTO;
 import MVC.interfaces.IControlador;
-import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.IPanelInfoEstado;
+import MVC.styles.Button;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.List;
-import static MVC.panels.PanelResumen.getjTable;
 
 public class PanelRecibo implements IPanelInfoEstado {
 
     @Override
-    public JPanel construir(IModeloLectura modelo, IControlador controlador) {
+    public JPanel construir(VistaDTO datos, IControlador controlador) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
@@ -27,7 +26,7 @@ public class PanelRecibo implements IPanelInfoEstado {
         panel.add(titulo);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        Usuario usuario = modelo.getUsuarioActual();
+        UsuarioDTO usuario = datos.getUsuario();
         if (usuario != null) {
             panel.add(crearCampoRecibo("Número de tarjeta", usuario.getNumeroTarjeta()));
             panel.add(Box.createRigidArea(new Dimension(0, 8)));
@@ -44,9 +43,11 @@ public class PanelRecibo implements IPanelInfoEstado {
         panel.add(lblResumen);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        Venta venta = modelo.getVentaActual();
-        if (venta != null) {
-            JTable tabla = crearTablaDetalles(venta.getDetalles());
+        List<DetalleVentaDTO> detallesVenta = datos.getDetallesVenta();
+        Double totalVenta = datos.getTotalVenta();
+
+        if (detallesVenta != null && totalVenta != null) {
+            JTable tabla = TablaDetallesHelper.crearTabla(detallesVenta);
             JScrollPane scrollTabla = new JScrollPane(tabla);
             scrollTabla.setPreferredSize(new Dimension(300, 100));
             scrollTabla.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
@@ -61,7 +62,7 @@ public class PanelRecibo implements IPanelInfoEstado {
             lblTotalTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
             panel.add(lblTotalTitulo);
 
-            JLabel lblTotal = new JLabel(String.format("%.2fMXN", venta.getTotal()));
+            JLabel lblTotal = new JLabel(String.format("%.2fMXN", totalVenta));
             lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
             lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
             panel.add(lblTotal);
@@ -73,11 +74,7 @@ public class PanelRecibo implements IPanelInfoEstado {
         panelBoton.setBackground(Color.WHITE);
         panelBoton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.setFont(new Font("Arial", Font.PLAIN, 14));
-        btnAceptar.setPreferredSize(new Dimension(120, 35));
-        btnAceptar.setFocusPainted(false);
-        btnAceptar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Button btnAceptar = new Button("Aceptar", Color.black);
         btnAceptar.addActionListener(e -> controlador.aceptar());
         panelBoton.add(btnAceptar);
 
@@ -108,9 +105,5 @@ public class PanelRecibo implements IPanelInfoEstado {
         campoPanel.add(Box.createRigidArea(new Dimension(0, 2)));
         campoPanel.add(txt);
         return campoPanel;
-    }
-
-    private JTable crearTablaDetalles(List<DetalleVenta> detalles) {
-        return getjTable(detalles);
     }
 }

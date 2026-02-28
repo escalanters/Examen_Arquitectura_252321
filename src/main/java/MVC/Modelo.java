@@ -9,6 +9,8 @@ import MVC.interfaces.IModeloEscritura;
 import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.ISuscriptor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,8 +37,17 @@ public class Modelo implements IModeloEscritura, IModeloLectura {
 
     private void notificarCambios() {
         for (ISuscriptor s : suscriptores) {
-            s.actualizar(this);
+            s.actualizar();
         }
+    }
+
+    private Producto buscarProductoPorNombre(String nombre) {
+        for (Producto p : productos) {
+            if (p.getNombre().equals(nombre)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -46,7 +57,10 @@ public class Modelo implements IModeloEscritura, IModeloLectura {
     }
 
     @Override
-    public void incrementarCantidad(Producto producto) {
+    public void incrementarCantidad(String nombreProducto) {
+        Producto producto = buscarProductoPorNombre(nombreProducto);
+        if (producto == null) return;
+
         int actual = carrito.getOrDefault(producto, 0);
         if (actual < producto.getStock()) {
             carrito.put(producto, actual + 1);
@@ -55,7 +69,10 @@ public class Modelo implements IModeloEscritura, IModeloLectura {
     }
 
     @Override
-    public void decrementarCantidad(Producto producto) {
+    public void decrementarCantidad(String nombreProducto) {
+        Producto producto = buscarProductoPorNombre(nombreProducto);
+        if (producto == null) return;
+
         int actual = carrito.getOrDefault(producto, 0);
         if (actual > 0) {
             carrito.put(producto, actual - 1);
@@ -71,12 +88,13 @@ public class Modelo implements IModeloEscritura, IModeloLectura {
 
     @Override
     public void procesarPago(String numeroTarjeta, String bancoEmisor, String ciudad) {
+        if (numeroTarjeta.trim().isEmpty() || bancoEmisor.trim().isEmpty() || ciudad.trim().isEmpty()) {
+            return;
+        }
         this.usuarioActual = new Usuario(numeroTarjeta, bancoEmisor, ciudad);
-
         List<DetalleVenta> detalles = generarDetallesCarrito();
         double total = calcularTotal();
         this.ventaActual = new Venta(detalles, total);
-
         this.estadoVista = EstadoVista.CONFIRMACION_PAGO;
         notificarCambios();
     }
@@ -120,10 +138,12 @@ public class Modelo implements IModeloEscritura, IModeloLectura {
 
     @Override
     public double calcularTotal() {
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
         for (Map.Entry<Producto, Integer> entry : carrito.entrySet()) {
-            total += entry.getKey().getPrecio() * entry.getValue();
+            BigDecimal precio = BigDecimal.valueOf(entry.getKey().getPrecio());
+            BigDecimal cantidad = BigDecimal.valueOf(entry.getValue());
+            total = total.add(precio.multiply(cantidad));
         }
-        return total;
+        return total.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
