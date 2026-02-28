@@ -1,4 +1,4 @@
-package MVC;
+package MVC.panels;
 
 import MVC.dto.ProductoDTO;
 import MVC.dto.VistaDTO;
@@ -101,7 +101,6 @@ public class UIPanelProducto extends JPanel implements IComponent {
         panelCantidad.setBackground(Color.WHITE);
         panelCantidad.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // La UI envía el NOMBRE del producto al controlador, no el objeto de dominio
         Button btnMenos = new Button(" - ", Color.gray);
         btnMenos.addActionListener(e -> controlador.decrementarCantidad(producto.getNombre()));
         btnMenos.setEnabled(permitirEdicion && cantidad > 0);

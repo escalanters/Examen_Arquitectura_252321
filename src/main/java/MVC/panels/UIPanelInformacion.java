@@ -1,4 +1,4 @@
-package MVC;
+package MVC.panels;
 
 import MVC.dto.VistaDTO;
 import MVC.enums.EstadoVista;

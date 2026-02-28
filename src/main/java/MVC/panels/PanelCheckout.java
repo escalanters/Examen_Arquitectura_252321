@@ -8,13 +8,6 @@ import MVC.styles.Button;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Panel de checkout — solicita datos de pago al usuario.
- *
- * Recibe VistaDTO (aunque en este panel no necesita muchos datos del estado,
- * la firma uniforme permite consistencia con el patrón Strategy).
- * Las acciones del usuario se envían al controlador con datos primitivos.
- */
 public class PanelCheckout implements IPanelInfoEstado {
 
     @Override

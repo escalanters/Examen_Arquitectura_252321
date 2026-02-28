@@ -17,7 +17,5 @@ public class ProductoDTO {
 
     public String getNombre() { return nombre; }
     public double getPrecio() { return precio; }
-    public int getStock() { return stock; }
-    public boolean isDisponible() { return disponible; }
     public int getCantidadEnCarrito() { return cantidadEnCarrito; }
 }

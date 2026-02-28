@@ -1,12 +1,14 @@
 package MVC;
 
 import MVC.dto.VistaDTO;
-import MVC.dto.VistaDTOMapper;
+import MVC.mapper.VistaDTOMapper;
 import MVC.enums.EstadoVista;
 import MVC.interfaces.IComponent;
 import MVC.interfaces.IControlador;
 import MVC.interfaces.IModeloLectura;
 import MVC.interfaces.ISuscriptor;
+import MVC.panels.UIPanelInformacion;
+import MVC.panels.UIPanelProducto;
 
 import javax.swing.*;
 import java.awt.*;

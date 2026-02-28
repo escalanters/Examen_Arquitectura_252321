@@ -1,9 +1,13 @@
-package MVC.dto;
+package MVC.mapper;
 
 import MVC.domain.DetalleVenta;
 import MVC.domain.Producto;
 import MVC.domain.Usuario;
 import MVC.domain.Venta;
+import MVC.dto.DetalleVentaDTO;
+import MVC.dto.ProductoDTO;
+import MVC.dto.UsuarioDTO;
+import MVC.dto.VistaDTO;
 import MVC.interfaces.IModeloLectura;
 
 import java.util.ArrayList;
